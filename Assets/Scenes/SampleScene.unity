@@ -1140,7 +1140,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cadf7497d8e9ec40806fee7a84123e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToInstantiate: {fileID: 8176175528200792807, guid: 33b77d666350b1a42b1e1bc9bbc0d347, type: 3}
+  gameObjectToInstantiate:
+  - {fileID: 8176175528200792807, guid: 33b77d666350b1a42b1e1bc9bbc0d347, type: 3}
+  - {fileID: 842699782406039189, guid: ce7db4f2daed1b448b43f7a05c2e6852, type: 3}
   canvas: {fileID: 1284906516}
   button: {fileID: 1382112779}
   isObjectSpawned: 0

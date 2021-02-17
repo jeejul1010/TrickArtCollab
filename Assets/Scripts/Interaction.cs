@@ -10,21 +10,21 @@ public class Interaction : MonoBehaviour
     //public float scrollX = 0.5f;
     //public float scrollY = 0.5f;
     Vector2 offset = Vector2.zero;
-    public Vector2 flowRate = new Vector2(0f, 0.5f);
+    public Vector2 flowRate = new Vector2(0f, 0.5f); //물 흐르기
 
-    bool waterflow;
+    bool waterflow; //물 흐르기 여부
 
     RectTransform foot;
-    GameObject footUI;
+    GameObject footUI; //발 아이콘
 
     public GameObject particle;
-    public GameObject river;
+    public GameObject river; //바닥에 깐 작품. 물바닥
     public GameObject redfish;
 
-    Animator anim;
+    Animator anim; //물고기 애니메이션
 
     AudioSource riverSound;
-    bool artworkHit;
+    bool artworkHit; //작품에 발을 들였는지 여부
 
     public bool rise; //물 속에서 나오기 시작여부 결정
 
@@ -44,14 +44,15 @@ public class Interaction : MonoBehaviour
 
         rise = false;
 
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (footUI.activeInHierarchy)
+        if (footUI.activeInHierarchy) //발 아이콘이 나타났는지
         {
-            if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began))
+            if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began)) //터치가 있었는지
             {
                 Vector2 touch = Input.GetTouch(0).position;
                 Vector3 touchPos = new Vector3(touch.x, touch.y, 0);
@@ -62,15 +63,14 @@ public class Interaction : MonoBehaviour
                 {
                     if (t_hit.collider != null)
                     {
-                        if (t_hit.collider.gameObject.tag == "redfish")
+                        if (t_hit.collider.gameObject.tag == "redfish") //터치가 어떤 오브젝트와 충돌했는지
                         {
-
                             Instantiate(particle, t_hit.point, Quaternion.LookRotation(t_hit.normal));
                             Destroy(redfish);
                         }
-                        else if(t_hit.collider.gameObject.tag == "rise") //물 속에 있다가 수면 위로!
+                        else if(t_hit.collider.gameObject.tag == "rise")
                         {
-                            rise = true;
+                            rise = true; //물 속에 있다가 수면 위로!
                         }
                     }
                 }
@@ -86,10 +86,10 @@ public class Interaction : MonoBehaviour
             {
                 if (hit.collider != null)
                 {
-                    if (hit.collider.gameObject.tag == "artwork")
+                    if (hit.collider.gameObject.tag == "artwork") //발 아이콘이 어떤 오브젝트와 충돌했는지. 어떤 오브젝트 위에 와 있는지
                     {
                         
-                        if (!artworkHit)
+                        if (!artworkHit) //발 아이콘이 작품에 들어갔을 때 일어나는 일들
                         {
                             if (anim != null)
                             {
@@ -116,7 +116,7 @@ public class Interaction : MonoBehaviour
             }
             else
             {
-                if(artworkHit)
+                if(artworkHit) //발 아이콘이 작품에서 빠져나왔을 때 일어나는 일들
                 {
                     if (anim != null)
                     {

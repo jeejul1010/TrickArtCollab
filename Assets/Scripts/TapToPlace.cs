@@ -10,8 +10,10 @@ using UnityEngine.XR.ARSubsystems;
 [RequireComponent(typeof(ARRaycastManager))]
 public class TapToPlace : MonoBehaviour
 {
-    public GameObject gameObjectToInstantiate;
+    public GameObject[] gameObjectToInstantiate;
+    string nowSelected; //지금 선택된 작품
 
+    private GameObject selected;
     private GameObject spawnedObject;
     private ARRaycastManager _arRaycastManager;
     private Vector2 touchPosition;
@@ -63,30 +65,34 @@ public class TapToPlace : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!TryGetTouchPosition(out Vector2 touchPosition))
+        if(nowSelected!=null)
         {
-            return;
-        }
-
-        if(_arRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
-        {
-            var hitPose = hits[0].pose;
-
-            if(spawnedObject == null)
-            {
-                isObjectSpawned = true;
-                spawnedObject = Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation);
-                
-            }
-            else if(isFixed==true)
+            if (!TryGetTouchPosition(out Vector2 touchPosition))
             {
                 return;
             }
-            else if(!IsPointerOverUIObject(canvas, touchPosition)) //button != Physics2D.OverlapPoint(touchPosition)
+
+            if (_arRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
             {
-                spawnedObject.transform.position = hitPose.position;
+                var hitPose = hits[0].pose;
+
+                if (spawnedObject == null)
+                {
+                    isObjectSpawned = true;
+                    spawnedObject = Instantiate(selected, hitPose.position, hitPose.rotation);
+
+                }
+                else if (isFixed == true)
+                {
+                    return;
+                }
+                else if (!IsPointerOverUIObject(canvas, touchPosition)) //button != Physics2D.OverlapPoint(touchPosition)
+                {
+                    spawnedObject.transform.position = hitPose.position;
+                }
             }
         }
+        
         
     }
 
@@ -115,5 +121,32 @@ public class TapToPlace : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void ChooseArtwork(string chosen)
+    {
+        if(chosen.Equals(nowSelected)) //이미 선택된 애 선택했을 때
+        {
+            return;
+        }
+        else if(selected!=null && !chosen.Equals(nowSelected)) //이미 선택된 애랑 다른 애 선택했을 때
+        {
+            if(spawnedObject!=null)
+            {
+                Destroy(spawnedObject);
+            }
+        }
+        if(chosen.Equals("Nature"))
+        {
+            selected = gameObjectToInstantiate[0];
+            nowSelected = chosen;
+        }
+        else if(chosen.Equals("Fantasy"))
+        {
+            selected = gameObjectToInstantiate[1];
+            nowSelected = chosen;
+        }
+        
+
     }
 }
