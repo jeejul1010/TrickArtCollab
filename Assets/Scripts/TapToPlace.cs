@@ -21,7 +21,7 @@ public class TapToPlace : MonoBehaviour
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     public Canvas canvas;
-    public GameObject button;
+    //public GameObject button;
     GameObject footIcon;
 
     public bool isObjectSpawned;
@@ -52,20 +52,23 @@ public class TapToPlace : MonoBehaviour
 
     public void ButtonOnClick()
     {
-        LeanTwistRotateAxis rotate = spawnedObject.GetComponentInChildren<LeanTwistRotateAxis>();
-        LeanPinchScale scale = spawnedObject.GetComponentInChildren<LeanPinchScale>();
-        rotate.enabled = false;
-        scale.enabled = false;
-        spawnedObject.AddComponent<ARAnchor>();
-        isFixed = true;
-        button.SetActive(false);
-        footIcon.SetActive(true);
+        if(spawnedObject!=null)
+        {
+            LeanTwistRotateAxis rotate = spawnedObject.GetComponentInChildren<LeanTwistRotateAxis>();
+            LeanPinchScale scale = spawnedObject.GetComponentInChildren<LeanPinchScale>();
+            rotate.enabled = false;
+            scale.enabled = false;
+            spawnedObject.AddComponent<ARAnchor>();
+            isFixed = true;
+            footIcon.SetActive(true);
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(nowSelected!=null)
+        if(selected!=null)
         {
             if (!TryGetTouchPosition(out Vector2 touchPosition))
             {
@@ -80,6 +83,10 @@ public class TapToPlace : MonoBehaviour
                 {
                     isObjectSpawned = true;
                     spawnedObject = Instantiate(selected, hitPose.position, hitPose.rotation);
+                    AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                    AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                    //activity.CallStatic("showCheckButton"); //안드로이드 쪽으로 체크버튼 표시하게
+                    activity.Call("runOnUiThread", new AndroidJavaRunnable(() => { activity.Call("showCheckButton"); }));
 
                 }
                 else if (isFixed == true)
@@ -125,7 +132,21 @@ public class TapToPlace : MonoBehaviour
 
     public void ChooseArtwork(string chosen)
     {
-        if(chosen.Equals(nowSelected)) //이미 선택된 애 선택했을 때
+        /*if(chosen.Equals("Else"))
+        {
+            isObjectSpawned = false;
+            nowSelected = null;
+            if(selected!=null)
+            {
+                Destroy(selected);
+            }
+            if(spawnedObject!=null)
+            {
+                Destroy(spawnedObject);
+            }
+            return;
+        }
+        else if(chosen.Equals(nowSelected)) //이미 선택된 애 선택했을 때
         {
             return;
         }
@@ -134,6 +155,7 @@ public class TapToPlace : MonoBehaviour
             if(spawnedObject!=null)
             {
                 Destroy(spawnedObject);
+                isObjectSpawned = false;
             }
         }
         if(chosen.Equals("Nature"))
@@ -145,6 +167,82 @@ public class TapToPlace : MonoBehaviour
         {
             selected = gameObjectToInstantiate[1];
             nowSelected = chosen;
+        }*/
+        if(chosen.Equals("Nature"))
+        {
+            if(selected==null) //아무 작품도 안 연결
+            {
+                isObjectSpawned = false;
+                selected = gameObjectToInstantiate[0];
+                nowSelected = chosen;
+            }
+            else if(chosen.Equals(nowSelected)) //같은 작품 선택
+            {
+                return;
+            }
+            else //다른 작품 선택
+            {
+                if(spawnedObject!=null) //다른 작품 이미 생성된 경우
+                {
+                    Destroy(spawnedObject);
+                    AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                    AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                    activity.Call("runOnUiThread", new AndroidJavaRunnable(() => { activity.Call("hideCheckButton"); }));
+                    isObjectSpawned = false;
+                }
+                selected = gameObjectToInstantiate[0];
+                nowSelected = chosen;
+            }
+
+        }
+        else if(chosen.Equals("Fantasy"))
+        {
+            if (selected == null) //아무 작품도 안 연결
+            {
+                isObjectSpawned = false;
+                selected = gameObjectToInstantiate[1];
+                nowSelected = chosen;
+            }
+            else if (chosen.Equals(nowSelected)) //같은 작품 선택
+            {
+                return;
+            }
+            else //다른 작품 선택
+            {
+                if (spawnedObject != null) //다른 작품 이미 생성된 경우
+                {
+                    Destroy(spawnedObject);
+                    AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                    AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                    activity.Call("runOnUiThread", new AndroidJavaRunnable(() => { activity.Call("hideCheckButton"); }));
+                    isObjectSpawned = false;
+                }
+                selected = gameObjectToInstantiate[1];
+                nowSelected = chosen;
+            }
+
+        }
+        else
+        {
+            isObjectSpawned = true;
+            if(selected == null) //아무 작품도 안 연결
+            {
+                return;
+            }
+            else //뭐라도 연결돼있다면
+            {
+                selected = null;
+                nowSelected = null;
+                if(spawnedObject!=null)
+                {
+                    Destroy(spawnedObject);
+                    AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                    AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                    activity.Call("runOnUiThread", new AndroidJavaRunnable(() => { activity.Call("hideCheckButton"); }));
+                }
+
+            }
+
         }
         
 
