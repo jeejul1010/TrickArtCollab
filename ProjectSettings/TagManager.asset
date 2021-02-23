@@ -9,6 +9,8 @@ TagManager:
   - artwork
   - redfish
   - rise
+  - frog
+  - froggy
   layers:
   - Default
   - TransparentFX

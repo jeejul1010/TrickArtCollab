@@ -31,6 +31,10 @@ public class TapToPlace : MonoBehaviour
 
     private void Awake()
     {
+        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        activity.Call("runOnUiThread", new AndroidJavaRunnable(() => { activity.Call("onUnityModeEnded"); }));
+
         _arRaycastManager = GetComponent<ARRaycastManager>();
         footIcon = FindInActiveObjectByName("FootUI");
         isObjectSpawned = false;
@@ -195,7 +199,7 @@ public class TapToPlace : MonoBehaviour
             }
 
         }
-        else if(chosen.Equals("Fantasy"))
+        else if(chosen.Equals("Horror"))
         {
             if (selected == null) //아무 작품도 안 연결
             {
