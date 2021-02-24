@@ -14,7 +14,7 @@ public class TapToPlace : MonoBehaviour
     string nowSelected; //지금 선택된 작품
 
     private GameObject selected;
-    private GameObject spawnedObject;
+    public GameObject spawnedObject;
     private ARRaycastManager _arRaycastManager;
     private Vector2 touchPosition;
 

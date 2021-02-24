@@ -10,6 +10,8 @@ public class PlacementIndicator : MonoBehaviour
     private GameObject visual; //보여지는 placement indicator
     bool isObjectSpawned;
     public GameObject arSession;
+    public GameObject loadingIcon;
+    GameObject spawnedObject;
 
     bool startIndicator;
     void Start()
@@ -18,6 +20,7 @@ public class PlacementIndicator : MonoBehaviour
         visual = transform.GetChild(0).gameObject;
 
         visual.SetActive(false); //hide the placement visual
+        loadingIcon.SetActive(false);
 
         startIndicator = false;
         
@@ -45,7 +48,11 @@ public class PlacementIndicator : MonoBehaviour
                     transform.rotation = hits[0].pose.rotation;
 
                     if (!visual.activeInHierarchy)
+                    {
+                        loadingIcon.SetActive(false);
                         visual.SetActive(true);
+                    }
+                        
                 }
             }
         }
@@ -62,5 +69,20 @@ public class PlacementIndicator : MonoBehaviour
         {
             startIndicator = false;
         }
+    }
+
+    public void showLoading(string TorF)
+    {
+        spawnedObject = arSession.GetComponent<TapToPlace>().spawnedObject;
+
+        if (TorF.Equals("true") && spawnedObject==null && !visual.activeInHierarchy)
+        {
+            loadingIcon.SetActive(true);
+        }
+        else if(TorF.Equals("false"))
+        {
+            loadingIcon.SetActive(false);
+        }
+        
     }
 }
