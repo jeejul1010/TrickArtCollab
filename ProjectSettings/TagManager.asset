@@ -11,6 +11,8 @@ TagManager:
   - rise
   - frog
   - froggy
+  - log1
+  - stand
   layers:
   - Default
   - TransparentFX

@@ -759,6 +759,7 @@ MonoBehaviour:
   gameObjectToInstantiate:
   - {fileID: 8176175528200792807, guid: 33b77d666350b1a42b1e1bc9bbc0d347, type: 3}
   - {fileID: 842699782406039189, guid: ce7db4f2daed1b448b43f7a05c2e6852, type: 3}
+  spawnedObject: {fileID: 0}
   canvas: {fileID: 1284906516}
   isObjectSpawned: 0
 --- !u!114 &1472933970
